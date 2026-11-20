@@ -34,31 +34,18 @@ async function carregarNoticias() {
 
     try {
         const resposta = await fetch('/noticias');
-        if (!resposta.ok) {
-            const detalhe = await resposta.text();
-            throw new Error(`HTTP ${resposta.status} - ${detalhe}`);
-        }
+        if (!resposta.ok) throw new Error(`HTTP ${resposta.status}`);
 
-        const textoXml = await resposta.text();
-        const parser = new DOMParser();
-        const xml = parser.parseFromString(textoXml, "text/xml");
-        const items = xml.querySelectorAll("item");
+        const listaBruta = await resposta.json();
 
-        if (items.length > 0) {
-            todasNoticias = Array.from(items).slice(0, 18).map(item => {
-                const tituloCompleto = item.querySelector("title")?.textContent || "";
-                const link = item.querySelector("link")?.textContent || "#";
-                const pubDate = item.querySelector("pubDate")?.textContent || "";
-
-                const cat = classificarNoticia(tituloCompleto);
-                const dataObj = new Date(pubDate);
-                const dataFormatada = isNaN(dataObj) ? "Recente" : dataObj.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
-
+        if (Array.isArray(listaBruta) && listaBruta.length > 0) {
+            todasNoticias = listaBruta.map(item => {
+                const cat = classificarNoticia(item.titulo);
                 return {
-                    titulo: tituloCompleto,
-                    link: link,
-                    data: dataFormatada,
-                    fonte: 'ge.globo',
+                    titulo: item.titulo,
+                    link: item.link,
+                    data: item.data,
+                    fonte: item.fonte,
                     tipo: cat.tipo,
                     label: cat.label
                 };
@@ -67,10 +54,10 @@ async function carregarNoticias() {
             statusEl.style.display = 'none';
             renderizarNoticias(todasNoticias);
         } else {
-            statusEl.innerText = '⚠️ Nenhuma notícia encontrada no feed no momento.';
+            statusEl.innerText = '⚠️ Nenhuma notícia encontrada na página do GE no momento.';
         }
     } catch (erro) {
-        statusEl.innerText = `⚠️ Não foi possível carregar o feed (${erro.message}).`;
+        statusEl.innerText = `⚠️ Não foi possível carregar as notícias (${erro.message}).`;
     }
 }
 
