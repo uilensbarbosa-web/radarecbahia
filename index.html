@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radar EC Bahia - Mercado da Bola</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <img src="https://escudoteca.com/Imagens/Escudos/Brasil/Nordeste/Bahia/bahia9.webp" alt="Escudo EC Bahia">
+        <div>
+            <h1>Radar <span>EC Bahia</span></h1>
+            <p>Tudo sobre o vai e vem do Esquadrão no mercado da bola 🔵🔴⚪</p>
+        </div>
+    </header>
+
+    <div class="filtros">
+        <button class="ativo" onclick="filtrar('todas', this)">Todas as Movimentações</button>
+        <button onclick="filtrar('chegada', this)">📥 Chegadas & Rumores</button>
+        <button onclick="filtrar('renovacao', this)">✍️ Renovações</button>
+        <button onclick="filtrar('saida', this)">📤 Saídas & Empréstimos</button>
+    </div>
+
+    <div id="status">🔄 Buscando notícias recentes do Esquadrão...</div>
+
+    <div class="grid-noticias" id="grid-noticias"></div>
+
+    <section class="comentarios-box">
+        <h2>💬 Resenha da Nação Tricolor</h2>
+        <p>Comente sobre os reforços, renovações e saídas do Esquadrão.</p>
+
+        <div class="form-grupo">
+            <input type="text" id="nome-usuario" placeholder="Seu nome ou apelido (ex: Tricolor de Aço)">
+            <textarea id="texto-comentario" placeholder="O que achou das movimentações do Bahia?"></textarea>
+            <button class="btn-enviar" onclick="adicionarComentario()">Publicar Comentário</button>
+        </div>
+
+        <div class="lista-comentarios" id="lista-comentarios"></div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>

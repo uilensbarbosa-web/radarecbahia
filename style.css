@@ -1,0 +1,169 @@
+:root {
+    --bg-dark: #0b132b;
+    --card-bg: #1c2541;
+    --bahia-blue: #005ca9;
+    --bahia-red: #e30613;
+    --text-light: #f8f9fa;
+    --text-muted: #adb5bd;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+    padding: 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+    border-bottom: 2px solid var(--bahia-blue);
+    padding-bottom: 15px;
+}
+
+header img { width: 55px; height: auto; }
+header h1 { font-size: 1.8rem; }
+header h1 span { color: #3a86ff; }
+header p { color: var(--text-muted); font-size: 0.95rem; margin-top: 4px; }
+
+.filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.filtros button {
+    background-color: var(--card-bg);
+    color: var(--text-light);
+    border: 1px solid #3a506b;
+    padding: 10px 18px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.filtros button.ativo, .filtros button:hover {
+    background-color: var(--bahia-blue);
+    border-color: var(--bahia-blue);
+}
+
+#status { color: #ffd166; margin-bottom: 20px; font-size: 0.95rem; }
+
+.grid-noticias {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 18px;
+    margin-bottom: 40px;
+}
+.card {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    padding: 18px;
+    border-left: 4px solid var(--bahia-blue);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s;
+}
+
+.card:hover { transform: translateY(-3px); }
+.card.saida { border-left-color: var(--bahia-red); }
+.card.renovacao { border-left-color: #06d6a0; }
+
+.badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 4px 10px;
+    border-radius: 12px;
+    background-color: rgba(58, 134, 255, 0.2);
+    color: #6ea8fe;
+    margin-bottom: 10px;
+    width: fit-content;
+}
+
+.card.saida .badge { background-color: rgba(227, 6, 19, 0.2); color: #ff6b6b; }
+.card.renovacao .badge { background-color: rgba(6, 214, 160, 0.2); color: #06d6a0; }
+.card h3 { font-size: 1.05rem; line-height: 1.4; margin-bottom: 12px; }
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.card-footer a { color: #6ea8fe; text-decoration: none; font-weight: bold; }
+
+.comentarios-box {
+    background-color: var(--card-bg);
+    padding: 25px;
+    border-radius: 12px;
+}
+
+.comentarios-box h2 { margin-bottom: 5px; }
+.comentarios-box > p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; }
+
+.form-grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+input, textarea {
+    background-color: var(--bg-dark);
+    border: 1px solid #3a506b;
+    color: var(--text-light);
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+}
+
+textarea { min-height: 80px; resize: vertical; }
+
+.btn-enviar {
+    background-color: var(--bahia-blue);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    width: fit-content;
+}
+
+.lista-comentarios { display: flex; flex-direction: column; gap: 12px; }
+
+.comentario-item {
+    background-color: var(--bg-dark);
+    padding: 14px;
+    border-radius: 8px;
+    border-left: 3px solid var(--bahia-red);
+}
+
+.comentario-topo {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: #6ea8fe;
+    margin-bottom: 6px;
+}
+
+.aviso-local { font-size: 0.78rem; color: var(--text-muted); margin-top: 8px; }
