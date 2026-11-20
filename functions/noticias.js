@@ -1,5 +1,5 @@
 export async function onRequest() {
-    const urlGeBahia = 'https://ge.globo.com/ba/futebol/times/bahia/';
+    const urlGeBahia = 'https://globo.com';
 
     try {
         const resposta = await fetch(urlGeBahia, {
@@ -14,7 +14,6 @@ export async function onRequest() {
 
         const html = await resposta.text();
         
-        // Extrai links e títulos das matérias publicadas na página do Bahia no GE
         const regex = /<a[^>]+href="(https:\/\/ge\.globo\.com\/ba\/futebol\/times\/bahia\/noticia\/[^"]+)"[^>]*>([^<]+)<\/a>/g;
         const noticias = [];
         const linksVistos = new Set();
