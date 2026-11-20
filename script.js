@@ -33,9 +33,8 @@ async function carregarNoticias() {
     const statusEl = document.getElementById('status');
 
     try {
-        // Chama a função nativa hospedada no próprio Cloudflare Pages
         const resposta = await fetch('/noticias');
-        if (!resposta.ok) throw new Error('Falha na resposta');
+        if (!resposta.ok) throw new Error(`HTTP ${resposta.status}`);
 
         const textoXml = await resposta.text();
         const parser = new DOMParser();
@@ -47,17 +46,21 @@ async function carregarNoticias() {
                 const tituloCompleto = item.querySelector("title")?.textContent || "";
                 const link = item.querySelector("link")?.textContent || "#";
                 const pubDate = item.querySelector("pubDate")?.textContent || "";
+                
+                // Extrai o domínio do link caso a tag de fonte não esteja explícita
+                let fonte = 'Portal Esportivo';
+                try {
+                    const urlObj = new URL(link);
+                    const realUrl = urlObj.searchParams.get('url') || link;
+                    fonte = new URL(realUrl).hostname.replace('www.', '').split('.')[0].toUpperCase();
+                } catch (e) {}
 
                 const cat = classificarNoticia(tituloCompleto);
                 const dataObj = new Date(pubDate);
                 const dataFormatada = isNaN(dataObj) ? "Recente" : dataObj.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
-                
-                const partesTitulo = tituloCompleto.split(' - ');
-                const fonte = partesTitulo.length > 1 ? partesTitulo.pop() : 'Portal Esportivo';
-                const tituloLimpo = partesTitulo.join(' - ');
 
                 return {
-                    titulo: tituloLimpo,
+                    titulo: tituloCompleto,
                     link: link,
                     data: dataFormatada,
                     fonte: fonte,
@@ -72,10 +75,9 @@ async function carregarNoticias() {
             statusEl.innerText = '⚠️ Nenhuma movimentação encontrada no momento.';
         }
     } catch (erro) {
-        statusEl.innerText = '⚠️ A busca direta requer publicação no Cloudflare Pages (não funciona no Live Server local).';
+        statusEl.innerText = `⚠️ Não foi possível carregar o feed (${erro.message}). Verifique se a pasta functions/noticias.js está no GitHub.`;
     }
 }
-
 
 function renderizarNoticias(lista) {
     const grid = document.getElementById('grid-noticias');
