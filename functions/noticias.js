@@ -1,28 +1,47 @@
 export async function onRequest() {
-    // Feed oficial do GE Globo sobre o Bahia (aberto e sem bloqueios de nuvem)
-    const feedUrl = 'https://globo.com';
+    const urlGeBahia = 'https://ge.globo.com/ba/futebol/times/bahia/';
 
     try {
-        const resposta = await fetch(feedUrl, {
+        const resposta = await fetch(urlGeBahia, {
             headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-                'Accept': 'application/rss+xml, application/xml, text/xml, */*'
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
             }
         });
 
         if (!resposta.ok) {
-            return new Response(`Erro na fonte GE: ${resposta.status}`, { status: 502 });
+            return new Response(JSON.stringify({ erro: `Status ${resposta.status}` }), { status: 502 });
         }
 
-        const xmlTexto = await resposta.text();
+        const html = await resposta.text();
+        
+        // Extrai links e títulos das matérias publicadas na página do Bahia no GE
+        const regex = /<a[^>]+href="(https:\/\/ge\.globo\.com\/ba\/futebol\/times\/bahia\/noticia\/[^"]+)"[^>]*>([^<]+)<\/a>/g;
+        const noticias = [];
+        const linksVistos = new Set();
+        let match;
 
-        return new Response(xmlTexto, {
+        while ((match = regex.exec(html)) !== null) {
+            const link = match[1];
+            const titulo = match[2].trim();
+
+            if (titulo.length > 20 && !linksVistos.has(link)) {
+                linksVistos.add(link);
+                noticias.push({
+                    titulo: titulo,
+                    link: link,
+                    fonte: 'ge.globo',
+                    data: 'Recente'
+                });
+            }
+        }
+
+        return new Response(JSON.stringify(noticias.slice(0, 18)), {
             headers: {
-                'Content-Type': 'application/xml; charset=utf-8',
+                'Content-Type': 'application/json; charset=utf-8',
                 'Cache-Control': 'public, max-age=300'
             }
         });
     } catch (erro) {
-        return new Response(`Falha interna: ${erro.message}`, { status: 500 });
+        return new Response(JSON.stringify({ erro: erro.message }), { status: 500 });
     }
 }
