@@ -34,7 +34,10 @@ async function carregarNoticias() {
 
     try {
         const resposta = await fetch('/noticias');
-        if (!resposta.ok) throw new Error(`HTTP ${resposta.status}`);
+        if (!resposta.ok) {
+            const detalhe = await resposta.text();
+            throw new Error(`HTTP ${resposta.status} - ${detalhe}`);
+        }
 
         const textoXml = await resposta.text();
         const parser = new DOMParser();
@@ -46,14 +49,6 @@ async function carregarNoticias() {
                 const tituloCompleto = item.querySelector("title")?.textContent || "";
                 const link = item.querySelector("link")?.textContent || "#";
                 const pubDate = item.querySelector("pubDate")?.textContent || "";
-                
-                // Extrai o domínio do link caso a tag de fonte não esteja explícita
-                let fonte = 'Portal Esportivo';
-                try {
-                    const urlObj = new URL(link);
-                    const realUrl = urlObj.searchParams.get('url') || link;
-                    fonte = new URL(realUrl).hostname.replace('www.', '').split('.')[0].toUpperCase();
-                } catch (e) {}
 
                 const cat = classificarNoticia(tituloCompleto);
                 const dataObj = new Date(pubDate);
@@ -63,7 +58,7 @@ async function carregarNoticias() {
                     titulo: tituloCompleto,
                     link: link,
                     data: dataFormatada,
-                    fonte: fonte,
+                    fonte: 'ge.globo',
                     tipo: cat.tipo,
                     label: cat.label
                 };
@@ -72,12 +67,13 @@ async function carregarNoticias() {
             statusEl.style.display = 'none';
             renderizarNoticias(todasNoticias);
         } else {
-            statusEl.innerText = '⚠️ Nenhuma movimentação encontrada no momento.';
+            statusEl.innerText = '⚠️ Nenhuma notícia encontrada no feed no momento.';
         }
     } catch (erro) {
-        statusEl.innerText = `⚠️ Não foi possível carregar o feed (${erro.message}). Verifique se a pasta functions/noticias.js está no GitHub.`;
+        statusEl.innerText = `⚠️ Não foi possível carregar o feed (${erro.message}).`;
     }
 }
+
 
 function renderizarNoticias(lista) {
     const grid = document.getElementById('grid-noticias');
