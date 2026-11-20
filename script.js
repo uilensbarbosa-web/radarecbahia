@@ -53,8 +53,10 @@ async function carregarNoticias() {
 
             statusEl.style.display = 'none';
             renderizarNoticias(todasNoticias);
-        } else {
-            statusEl.innerText = '⚠️ Nenhuma notícia encontrada na página do GE no momento.';
+                } else {
+            statusEl.innerText = '⚠️ Nenhuma movimentação encontrada nos portais no momento.';
+        }
+
         }
     } catch (erro) {
         statusEl.innerText = `⚠️ Não foi possível carregar as notícias (${erro.message}).`;
